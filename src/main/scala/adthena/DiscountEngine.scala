@@ -17,8 +17,8 @@ object DiscountEngine {
         rule.offer._2 match {
           case FreeItem => discounts += (
             (rule.toString(),
-            Math.min(productEligibleOffer.get.quantity, nbTimes) * productEligibleOffer.get.product.price)
-          )
+              Math.min(productEligibleOffer.get.quantity, nbTimes) * productEligibleOffer.get.product.price)
+            )
           case Discount => discounts += ((rule.toString(), Math.min(productEligibleOffer.get.quantity, nbTimes) * productEligibleOffer.get.product.price * rule.offer._3 / 100))
         }
       }
@@ -27,6 +27,14 @@ object DiscountEngine {
     discounts
   }
 
+  def compute(basket: Basket, rules: List[DiscountRule]): ListBuffer[(String, BigDecimal)] = {
+
+    val discounts = new ListBuffer[(String, BigDecimal)]()
+    for (rule <- rules) {
+      discounts ++= compute(basket, rule)
+    }
+    discounts
+  }
 }
 
 
